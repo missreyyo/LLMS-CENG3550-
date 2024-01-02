@@ -10,6 +10,8 @@
     <div>
         <label for="ipfsInput">Text to be uploaded to IPFS:</label>
         <input type="text" id="ipfsInput">
+        <label for="receiverAddress">Receiver Ethereum Address:</label>
+        <input type="text" id="receiverAddress">
         <button onclick="uploadToIPFS()">Upload to IPFS</button>
     </div>
     <div>
@@ -17,19 +19,18 @@
         <p>Contract IPFS Hash: <span id="contractHash"></span></p>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/ipfs-http-client@46.0.0/dist/index.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/web3@1.6.0/dist/web3.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ipfs-http-client/dist/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
     <script src="App.js"></script>
 
     <script>
         window.onload = async () => {
-            // Connect to Metamask
+            
             if (window.ethereum) {
                 window.web3 = new Web3(window.ethereum);
                 try {
                     await window.ethereum.request({ method: 'eth_requestAccounts' });
 
-                    // Connect to IPFS
                     window.ipfs = createIPFSInstance();
 
                     displayContractHash();
@@ -42,35 +43,164 @@
         };
 
         function createIPFSInstance() {
-            return window.IpfsHttpClient({ host: 'ipfs.infura.io', port: 5001, protocol: 'https', headers: { authorization: '1dab7f3ee54c42de8baa0cd86ae1cd3e' } });
+            return window.IpfsHttpClient({ host: 'ipfs.infura.io', port: 5001, protocol: 'https', headers: { authorization: '6008ad809050449eafff9403eba4b754' } });
         }
 
         async function uploadToIPFS() {
             const textToUpload = document.getElementById("ipfsInput").value;
+            const receiverAddress = document.getElementById("receiverAddress").value;
 
             try {
-                // Upload to IPFS
+               
                 const ipfsResponse = await window.ipfs.add(textToUpload);
                 const ipfsHash = ipfsResponse.cid.toString();
 
-                // Update UI
                 document.getElementById("ipfsHash").innerText = ipfsHash;
 
-                // Set IPFS Hash in the Smart Contract
+               
                 const accounts = await window.web3.eth.getAccounts();
+                const contractAddress = '0xdCE5e8fAEE455Ae9929B031774b5c535B9c23b63';  
+                const contractAbi = [
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "name": "dataEntries",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "sender",
+              "type": "address"
+            },
+            {
+              "internalType": "string",
+              "name": "ipfsHash",
+              "type": "string"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "constant": true
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "string",
+              "name": "_ipfsHash",
+              "type": "string"
+            }
+          ],
+          "name": "setIPFSHash",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_sender",
+              "type": "address"
+            }
+          ],
+          "name": "getIPFSHash",
+          "outputs": [
+            {
+              "internalType": "string",
+              "name": "",
+              "type": "string"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "constant": true
+        }
+      ];
 
+                const contractInstance = new window.web3.eth.Contract(contractAbi, contractAddress);
+                await contractInstance.methods.setIPFSHash(receiverAddress, ipfsHash).send({ from: accounts[0] });
 
                 
- 
-                await setIPFSHash(ipfsHash, accounts[0]);
-
-                // Update UI with Contract IPFS Hash
                 displayContractHash();
             } catch (error) {
                 console.error("Error uploading to IPFS:", error);
             }
         }
+
+        async function displayContractHash() {
+            
+            const accounts = await window.web3.eth.getAccounts();
+            const contractAddress = '0xdCE5e8fAEE455Ae9929B031774b5c535B9c23b63';  
+            const contractAbi = [
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "name": "dataEntries",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "sender",
+              "type": "address"
+            },
+            {
+              "internalType": "string",
+              "name": "ipfsHash",
+              "type": "string"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "constant": true
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "string",
+              "name": "_ipfsHash",
+              "type": "string"
+            }
+          ],
+          "name": "setIPFSHash",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_sender",
+              "type": "address"
+            }
+          ],
+          "name": "getIPFSHash",
+          "outputs": [
+            {
+              "internalType": "string",
+              "name": "",
+              "type": "string"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "constant": true
+        }
+      ];
+
+            const contractInstance = new window.web3.eth.Contract(contractAbi, contractAddress);
+            const contractHash = await contractInstance.methods.getIPFSHash(accounts[0]).call();
+
+            document.getElementById("contractHash").innerText = contractHash;
+        }
     </script>
 </body>
 </html>
-
