@@ -3,7 +3,7 @@ import FileUpload from './FileUpload.js';
 import SimpleStorage from './contracts/SimpleStorage.json';
 import { web3, getAccount } from './utils/web3.js';
 
-// Ethereum'dan tüm işlemleri çeken fonksiyonu import edin
+
 import { fetchAllTransactions } from './utils/ethereum';
 
 const App = () => {
@@ -11,13 +11,13 @@ const App = () => {
     const [receiverAddress, setReceiverAddress] = useState('');
     const [transactions, setTransactions] = useState([]);
 
-    // İşlemleri blockchain'den çeken fonksiyon
+    
     const loadTransactions = async () => {
         const transactions = await fetchAllTransactions();
         setTransactions(transactions);
     };
 
-    // Dosya yüklendiğinde çalışacak fonksiyon
+    
     const handleFileUploaded = async (ipfsLink, receiverAddress) => {
         setIpfsLink(ipfsLink);
         const account = await getAccount();
@@ -31,11 +31,11 @@ const App = () => {
         await contract.methods.sendFile(receiverAddress, ipfsLink).send({ from: account });
         console.log('Succesfull!!');
 
-        // İşlem tamamlandıktan sonra işlemleri yeniden yükleyin
+       
         await loadTransactions();
     };
 
-    // Bileşen yüklendiğinde işlemleri yükleyin
+ 
     useEffect(() => {
         loadTransactions();
     }, []);
