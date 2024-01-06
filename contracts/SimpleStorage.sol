@@ -2,40 +2,42 @@
 pragma solidity ^0.8.0;
 
 contract SimpleStorage {
-    struct DataEntry {
+    address public owner;
+    event FileSent(address indexed sender, address indexed receiver, string ipfsHash);
+
+    struct Transaction {
         address sender;
-        address recipient;
+        address receiver;
         string ipfsHash;
     }
 
-    mapping(address => DataEntry[]) public sentDataEntries;
-    mapping(address => DataEntry[]) public receivedDataEntries;
+    Transaction[] public transactions;
 
-    modifier onlySender(address _recipient) {
-        require(
-            msg.sender == _recipient,
-            "You are not allowed to perform this action"
-        );
-        _;
+    constructor() {
+        owner = msg.sender;
     }
 
-    function setIPFSHash(address _recipient, string memory _ipfsHash) public onlySender(_recipient) {
-        DataEntry memory newDataEntry = DataEntry(msg.sender, _recipient, _ipfsHash);
-        sentDataEntries[msg.sender].push(newDataEntry);
-        receivedDataEntries[_recipient].push(newDataEntry);
+    function sendFile(address _receiver, string memory _ipfsHash) external {
+        Transaction memory newTransaction = Transaction({
+            sender: msg.sender,
+            receiver: _receiver,
+            ipfsHash: _ipfsHash
+        });
+        transactions.push(newTransaction);
+        emit FileSent(msg.sender, _receiver, _ipfsHash);
     }
 
-    function getSentDataEntries() public view returns (DataEntry[] memory) {
-        return sentDataEntries[msg.sender];
+    function getTransactionCount() external view returns (uint256) {
+        return transactions.length;
     }
 
-    function getReceivedDataEntries() public view returns (DataEntry[] memory) {
-        return receivedDataEntries[msg.sender];
+    function getTransaction(uint256 _index) external view returns (address, address, string memory) {
+        require(_index < transactions.length, "Index out of bounds");
+        Transaction memory transaction = transactions[_index];
+        return (transaction.sender, transaction.receiver, transaction.ipfsHash);
     }
 
-    function getIPFSHash(address _sender, address _recipient, uint256 _index) public view returns (string memory) {
-        require(_index < sentDataEntries[_sender].length, "Index out of bounds");
-        require(sentDataEntries[_sender][_index].recipient == _recipient, "Invalid recipient");
-        return sentDataEntries[_sender][_index].ipfsHash;
+    function getAllTransactions() public view returns (Transaction[] memory) {
+    return transactions;
     }
 }

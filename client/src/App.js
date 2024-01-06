@@ -1,152 +1,63 @@
-import React, { useEffect, useState } from 'react';
-import Web3 from 'web3';
-import * as IpfsHttpClient from 'ipfs-http-client';
+import React, { useState, useEffect } from 'react';
+import FileUpload from './FileUpload.js';
+import SimpleStorage from './contracts/SimpleStorage.json';
+import { web3, getAccount } from './utils/web3.js';
 
-function App() {
-  const [web3, setWeb3] = useState(null);
-  const [contract, setContract] = useState(null);
-  const [ipfs, setIpfs] = useState(null);
-  const [ipfsHash, setIpfsHash] = useState('');
-  const [receiverAddress, setReceiverAddress] = useState('');
-  const [contractHash, setContractHash] = useState('');
+// Ethereum'dan tüm işlemleri çeken fonksiyonu import edin
+import { fetchAllTransactions } from './utils/ethereum';
 
-  const contractAddress = '0xdCE5e8fAEE455Ae9929B031774b5c535B9c23b63'; 
+const App = () => {
+    const [ipfsLink, setIpfsLink] = useState('');
+    const [receiverAddress, setReceiverAddress] = useState('');
+    const [transactions, setTransactions] = useState([]);
 
-  const contractAbi = [
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "name": "dataEntries",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "sender",
-          "type": "address"
-        },
-        {
-          "internalType": "string",
-          "name": "ipfsHash",
-          "type": "string"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function",
-      "constant": true
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "string",
-          "name": "_ipfsHash",
-          "type": "string"
-        }
-      ],
-      "name": "setIPFSHash",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_sender",
-          "type": "address"
-        }
-      ],
-      "name": "getIPFSHash",
-      "outputs": [
-        {
-          "internalType": "string",
-          "name": "",
-          "type": "string"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function",
-      "constant": true
-    }
-  ];
-
-  useEffect(() => {
-    
-    const init = async () => {
-     
-      if (window.ethereum) {
-        const _web3 = new Web3(window.ethereum);
-        try {
-          await window.ethereum.enable();
-          setWeb3(_web3);
-
-          
-          const _contract = new _web3.eth.Contract(contractAbi, contractAddress);
-          setContract(_contract);
-
-          
-          const _ipfs = IpfsHttpClient({ host: 'ipfs.infura.io', port: 5001, protocol: 'https', headers: { authorization: '6008ad809050449eafff9403eba4b754' } });
-          setIpfs(_ipfs);
-
-         
-          displayContractHash();
-        } catch (error) {
-          console.error("User denied account access");
-        }
-      } else {
-        console.error("No web3 provider detected");
-      }
+    // İşlemleri blockchain'den çeken fonksiyon
+    const loadTransactions = async () => {
+        const transactions = await fetchAllTransactions();
+        setTransactions(transactions);
     };
 
-    init();
-  }, []); 
+    // Dosya yüklendiğinde çalışacak fonksiyon
+    const handleFileUploaded = async (ipfsLink, receiverAddress) => {
+        setIpfsLink(ipfsLink);
+        const account = await getAccount();
+        const networkId = await web3.eth.net.getId();
+        const deployedNetwork = SimpleStorage.networks[networkId];
+        const contract = new web3.eth.Contract(
+            SimpleStorage.abi,
+            deployedNetwork && deployedNetwork.address
+        );
 
-  const uploadToIPFS = async () => {
-    const textToUpload = prompt("Enter text to be uploaded to IPFS:");
-    const _receiverAddress = prompt("Enter receiver Ethereum address:");
+        await contract.methods.sendFile(receiverAddress, ipfsLink).send({ from: account });
+        console.log('Succesfull!!');
 
-    if (textToUpload && _receiverAddress) {
-      setReceiverAddress(_receiverAddress);
+        // İşlem tamamlandıktan sonra işlemleri yeniden yükleyin
+        await loadTransactions();
+    };
 
-      
-      const ipfsResponse = await ipfs.add(textToUpload);
-      const _ipfsHash = ipfsResponse.cid.toString();
-      setIpfsHash(_ipfsHash);
+    // Bileşen yüklendiğinde işlemleri yükleyin
+    useEffect(() => {
+        loadTransactions();
+    }, []);
 
-      
-      const accounts = await web3.eth.getAccounts();
-      await contract.methods.setIPFSHash(_receiverAddress, _ipfsHash).send({ from: accounts[0] });
+    return (
+        <div>
+            <h1>LLMS</h1>
+            <FileUpload onFileUploaded={handleFileUploaded} />
+            {ipfsLink && <p>IPFS URL: {ipfsLink}</p>}
 
-      displayContractHash();
-    } else {
-      console.error("Text or receiver address not provided");
-    }
-  };
-
-  const displayContractHash = async () => {
-    if (web3 && contract) {
-      const accounts = await web3.eth.getAccounts();
-      const _contractHash = await contract.methods.getIPFSHash(accounts[0]).call();
-      setContractHash(_contractHash);
-    }
-  };
-
-  return (
-    <div>
-      <h1>Ethereum IPFS Metamask Example</h1>
-      <div>
-        <button onClick={uploadToIPFS}>Upload to IPFS</button>
-      </div>
-      <div>
-        <p>IPFS Hash: {ipfsHash}</p>
-        <p>Receiver Ethereum Address: {receiverAddress}</p>
-        <p>Contract IPFS Hash: {contractHash}</p>
-      </div>
-    </div>
-  );
-}
+            <h2>Transactions</h2>
+            <ul>
+                {transactions.map((tx, index) => (
+                    <li key={index}>
+                        <p><strong>Sender:</strong> {tx.sender}</p>
+                        <p><strong>Receiver:</strong> {tx.receiver}</p>
+                        <p><strong>IPFS Hash:</strong> {tx.ipfsHash}</p>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
+};
 
 export default App;
