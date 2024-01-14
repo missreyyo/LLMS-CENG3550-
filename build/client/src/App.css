@@ -1,0 +1,152 @@
+/* App.css */
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.App {
+  text-align: center;
+  background-color: #f7f7f7;
+  color: #333;
+  padding: 20px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+/* Existing styles... */
+
+/* Navbar styles */
+.navbar {
+  position: fixed; /* Fixed position */
+  top: 0; /* Align to the top of the page */
+  left: 0; /* Align to the left of the page */
+  width: 100%; /* Span the full width of the viewport */
+  background-color: #333; /* Your color preference */
+  overflow: hidden;
+  z-index: 1000; /* Ensure it's above other content */
+}
+
+.navbar a {
+  color: white;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+}
+
+.navbar a:hover {
+  background-color: #555;
+}
+
+/* Update input and button styles for better appearance in the navbar */
+input[type="text"], .navbar button {
+  padding: 0.5rem;
+  margin: 0 0.5rem;
+  border-radius: 0.3rem;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+.navbar button {
+  background-color: #008cba;
+  color: white;
+  border: none;
+  cursor: pointer;
+  margin: 10px;
+}
+
+.navbar button:hover {
+  background-color: #005f6b;
+}
+
+h1 {
+  color: #333;
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+h2 {
+  color: #333;
+  margin: 2rem 0 1rem;
+}
+
+input, button {
+  padding: 10px;
+  margin: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+button {
+  background-color: #008cba;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #005f6b;
+}
+
+.FileUpload {
+  margin: 20px 0;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+ul li {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+p {
+  font-size: 1.2rem;
+  line-height: 1.5;
+  color: #666;
+}
+
+strong {
+  color: #000;
+  font-weight: bold;
+}
+
+.ipfs-link {
+  color: #0077cc;
+  word-break: break-all;
+  display: inline-block;
+  margin-top: 10px;
+  text-decoration: none;
+}
+
+.ipfs-link:hover {
+  text-decoration: underline;
+}
+.transactions-header {
+  margin-top: 20px; 
+}
+
+.transactions-content {
+  margin-top: 20px; 
+}
+
+.no-transactions-message {
+  margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2rem;
+  }
+}
