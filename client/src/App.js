@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import FileUpload from './FileUpload'; // Your component for uploading files
-import SimpleStorage from './contracts/SimpleStorage.json'; // Your contract definition
-import { web3, getAccount } from './utils/web3'; // Your utility functions for web3
-import { fetchAllTransactions } from './utils/ethereum'; // Your function to fetch transactions
+import FileUpload from './FileUpload'; //  component for uploading files
+import SimpleStorage from './contracts/SimpleStorage.json'; //  contract definition
+import { web3, getAccount } from './utils/web3'; //  utility functions for web3
+import { fetchAllTransactions } from './utils/ethereum'; //  function to fetch transactions
 
 const App = () => {
   const [ipfsLink, setIpfsLink] = useState('');

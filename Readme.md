@@ -76,8 +76,3 @@ Reyhan DUYGU - reyhanduygu123@gmail.com
 Havva Burçin ÖZKAN - hburcinozkan@gmail.com
 
 ![Team Members](https://github.com/burcinozkan/deneme/assets/105969774/85896dbe-ddc9-4979-8a55-21bbe854ea68)
-
-
-
-
-
