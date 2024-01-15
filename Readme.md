@@ -11,7 +11,8 @@ This project explores critical challenges faced by Large Language Models (LLMs).
 4. Vulnerability to Malicious Inputs
 
 ### Solution
-![Solution](https://github.com/burcinozkan/deneme/assets/105969774/fd08b579-234f-4ec5-8dca-ffd4db471a9f) 
+ ![WhatsApp Image 2024-01-14 at 19 13 01 (1)](https://github.com/missreyyo/LLMS-CENG3550-/assets/105969774/b1121392-0b81-49a8-b04d-abc74ff6557c)
+
 
 ### Technologies Used
 - **Solidity**: For writing smart contracts.
@@ -75,4 +76,4 @@ After following these steps, your program should be up and running. Enjoy!
 Reyhan DUYGU - reyhanduygu123@gmail.com    
 Havva Burçin ÖZKAN - hburcinozkan@gmail.com
 
-![Team Members](https://github.com/burcinozkan/deneme/assets/105969774/85896dbe-ddc9-4979-8a55-21bbe854ea68)
+![WhatsApp Image 2024-01-14 at 19 13 01](https://github.com/missreyyo/LLMS-CENG3550-/assets/105969774/4457b33c-07fc-438c-8351-88f79aaf048a)
