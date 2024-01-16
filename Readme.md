@@ -11,7 +11,8 @@ This project explores critical challenges faced by Large Language Models (LLMs).
 4. Vulnerability to Malicious Inputs
 
 ### Solution
- ![WhatsApp Image 2024-01-14 at 19 13 01 (1)](https://github.com/missreyyo/LLMS-CENG3550-/assets/105969774/b1121392-0b81-49a8-b04d-abc74ff6557c)
+ 
+![LLMS drawio](https://github.com/missreyyo/LLMS-CENG3550-/assets/88316928/9e593615-fca4-45b2-a6b9-34f03ac51ab8)
 
 
 ### Technologies Used
