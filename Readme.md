@@ -83,7 +83,8 @@ Bu proje, Büyük Dil Modelleri'nin (BDM'ler) karşılaştığı önemli zorlukl
 
 ### Çözüm
 
-![BDM'ler drawio](https://github.com/missreyyo/LLMS-CENG3550-/assets/88316928/9e593615-fca4-45b2-a6b9-34f03ac51ab8)
+![türkçe drawio](https://github.com/missreyyo/LLMS-CENG3550-/assets/88316928/1a5c976c-2eb2-4bec-98be-9325b8c21f01)
+
 
 ### Kullanılan Teknolojiler
 - **Solidity**: Akıllı kontratlar yazmak için.
