@@ -118,7 +118,7 @@ Bu proje, Büyük Dil Modelleri'nin (BDM'ler) karşılaştığı önemli zorlukl
     ipfs daemon
     ```
 
-7. **Truffle ile Kontratların Göç Edilmesi:** Kod düzenleyicinizde yeni bir terminal açın ve şu komutu çalıştırın:
+7. **Truffle ile Kontratların Migrate Edilmesi:** Kod düzenleyicinizde yeni bir terminal açın ve şu komutu çalıştırın:
     ```bash
     truffle migrate --reset
     ```
